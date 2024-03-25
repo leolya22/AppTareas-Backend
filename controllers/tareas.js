@@ -38,17 +38,11 @@ export const actualizarTarea = async ( req, res = response ) => {
     const uid = req.uid;
 
     try {
-        const tarea = await Tarea.findById( tareaId );
-
-        if( !tarea ) {
-            return res.status( 404 ).json({
-                ok: false,
-                message: 'No se encontro ningun tarea con ese id'
-            })
-        }
+        encontrarTarea( tareaId, uid, false );
 
         const nuevaTarea = {
             ...req.body,
+            status: 'pending',
             uid
         }
         const tareaActualizada = await Tarea.findByIdAndUpdate( tareaId, nuevaTarea, { new: true } );
@@ -66,37 +60,44 @@ export const actualizarTarea = async ( req, res = response ) => {
     }
 }
 
+export const completarTarea = async ( req, res = response ) => {
+    const tareaId = req.params.id;
+    const uid = req.uid;
+    try {
+        const tarea = encontrarTarea( tareaId, uid, false );
+        tarea.status = 'completada'
+
+        const tareaCompletada = await Tarea.findByIdAndUpdate( tareaId, tarea, { new: true } );
+        return res.json({
+            ok: true,
+            tareaCompletada
+        })
+    } catch ( error ) {
+        console.log( error );
+        res.status( 500 ).json({
+            ok: false,
+            message: 'No se pudo completar la tarea'
+        })
+    }
+}
+
 export const eliminarTarea = async ( req, res = response ) => {
     const tareaId = req.params.id;
     const uid = req.uid;
 
     try {
-        const tarea = await Tarea.findById( tareaId );
+        encontrarTarea( tareaId, uid, true );
 
-        if( !tarea ) {
-            return res.status( 404 ).json({
-                ok: false,
-                message: 'No se encontro ningun tarea con ese id'
-            })
-        }
-        if( tarea.user.toString() != uid ) {
-            return res.status( 401 ).json({
-                ok: false,
-                message: 'No tiene permisos para borrar este tarea'
-            })
-        }
-
-        const TareaBorrado = await Tarea.findByIdAndDelete( tareaId );
+        await Tarea.findByIdAndDelete( tareaId );
         return res.json({
-            ok: false,
-            TareaBorrado
+            ok: true
         })
 
     } catch ( error ) {
         console.log( error );
         res.status( 500 ).json({
             ok: false,
-            message: 'Ocurrio un error inesperado'
+            message: 'No se pudo borrar la tarea'
         })
     }
 }

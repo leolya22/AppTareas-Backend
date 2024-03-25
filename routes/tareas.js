@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { validarJWT } from '../middlewares/validarJWT.js';
-import { actualizarTarea, crearTarea, eliminarTarea, recibirTareas } from '../controllers/tareas.js';
+import { actualizarTarea, completarTarea, crearTarea, eliminarTarea, recibirTareas } from '../controllers/tareas.js';
 import { validarCampos } from '../middlewares/validarCampos.js';
 
 
@@ -27,6 +27,7 @@ tareasRouter.put(
     ], 
     actualizarTarea
 );
+tareasRouter.put( '/completar/:id', completarTarea );
 tareasRouter.delete( '/:id', eliminarTarea );
 
 export default tareasRouter;
