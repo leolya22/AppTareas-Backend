@@ -1,25 +1,31 @@
-import Tarea from "../../models/Tarea";
+import Tarea from "../../models/Tarea.js";
 
-export const encontrarTarea = async ( tareaId, uid, pendienteDeEliminar ) => {
-    const tarea = await Tarea.findById( tareaId );
-
-    if( !tarea ) {
-        return res.status( 404 ).json({
-            ok: false,
-            message: 'No se encontro ningun tarea con ese id'
-        })
+export const encontrarTarea = async ( res, tareaId, uid, pendienteDeEliminar ) => {
+    try {
+        const tarea = await Tarea.findById( tareaId );
+        if( !tarea ) {
+            res.status( 404 ).json({
+                ok: false,
+                message: 'No se encontro ningun tarea con ese id'
+            });
+            return false;
+        }
+        if( tarea.uid != uid ) {
+            res.status( 401 ).json({
+                ok: false,
+                message: 'No tiene permisos para operar con esta tarea'
+            });
+            return false;
+        }
+        if( tarea.status == 'completada' && !pendienteDeEliminar ) {
+            res.status( 401 ).json({
+                ok: false,
+                message: 'No se puede modificar/completar una tarea que ya esta completada'
+            });
+            return false;
+        }
+        return tarea;
+    } catch ( error ) {
+        console.log( error );
     }
-    if( tarea.uid != uid ) {
-        return res.status( 401 ).json({
-            ok: false,
-            message: 'No tiene permisos para operar con esta tarea'
-        })
-    }
-    if( tarea.status == 'completada' && !pendienteDeEliminar ) {
-        return res.status( 401 ).json({
-            ok: false,
-            message: 'No se puede modificar/completar una tarea que ya esta completada'
-        })
-    }
-    return tarea
 }

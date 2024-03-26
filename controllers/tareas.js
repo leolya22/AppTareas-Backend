@@ -1,6 +1,7 @@
 import { response } from  'express';
 
 import Tarea from '../models/Tarea.js';
+import { encontrarTarea } from './helpers/encontrarTarea.js';
 
 
 export const recibirTareas = async ( req, res = response ) => {
@@ -38,7 +39,8 @@ export const actualizarTarea = async ( req, res = response ) => {
     const uid = req.uid;
 
     try {
-        encontrarTarea( tareaId, uid, false );
+        const tarea = await encontrarTarea( res, tareaId, uid, false );
+        if( !tarea ) return;
 
         const nuevaTarea = {
             ...req.body,
@@ -64,7 +66,8 @@ export const completarTarea = async ( req, res = response ) => {
     const tareaId = req.params.id;
     const uid = req.uid;
     try {
-        const tarea = encontrarTarea( tareaId, uid, false );
+        const tarea = await encontrarTarea( res, tareaId, uid, false );
+        if( !tarea ) return;
         tarea.status = 'completada'
 
         const tareaCompletada = await Tarea.findByIdAndUpdate( tareaId, tarea, { new: true } );
@@ -86,7 +89,8 @@ export const eliminarTarea = async ( req, res = response ) => {
     const uid = req.uid;
 
     try {
-        encontrarTarea( tareaId, uid, true );
+        const tarea = await encontrarTarea( res, tareaId, uid, true );
+        if( !tarea ) return;
 
         await Tarea.findByIdAndDelete( tareaId );
         return res.json({

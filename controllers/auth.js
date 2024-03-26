@@ -13,7 +13,7 @@ export const crearUsuario = async ( req, res = response ) => {
         if( usuario ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'Este email ya esta registrado. Por favor inicie la sesion con este mail o elija otro mail que no este registrado!',
+                message: 'Este email ya esta registrado!',
             })
         }
         usuario = new Usuario( req.body );
@@ -47,7 +47,7 @@ export const loginUsuario = async ( req, res = response ) => {
         if( !usuario ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'Este email aun no esta registrado. Por favor haga el registro!',
+                message: 'Este email aun no esta registrado!',
             })
         }
 
@@ -55,7 +55,7 @@ export const loginUsuario = async ( req, res = response ) => {
         if( !validPassword ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'La contraseña es invalida, por favor pruebe de nuevo!',
+                message: 'La contraseña es incorrecta!',
                 email,
             })
         }
@@ -72,7 +72,7 @@ export const loginUsuario = async ( req, res = response ) => {
     } catch (error) {
         res.status( 500 ).json({
             ok: false,
-            message: 'Error inesperado del server al ingresar. Contactese con nuestra mesa de ayuda!',
+            message: 'Error inesperado del server al iniciar sesion. Contactese con nuestra mesa de ayuda!',
         })
     }
 }
