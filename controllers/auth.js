@@ -47,7 +47,12 @@ export const loginUsuario = async ( req, res = response ) => {
         if( !usuario ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'Este email aun no esta registrado!',
+                errors: {
+                    email: {
+                        msg: 'Este email aun no esta registrado!',
+                        value: email
+                    }
+                }
             })
         }
 
@@ -55,8 +60,12 @@ export const loginUsuario = async ( req, res = response ) => {
         if( !validPassword ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'La contraseña es incorrecta!',
-                email,
+                errors: {
+                    password: {
+                        msg: 'La contraseña es incorrecta!',
+                        value: password
+                    }
+                }
             })
         }
 
