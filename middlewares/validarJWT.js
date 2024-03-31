@@ -19,7 +19,7 @@ export const validarJWT = ( req, res = response, next ) => {
         req.uid = uid;
         req.name = name;
         
-    } catch (error) {
+    } catch ( error ) {
         return res.status( 401 ).json({
             ok: false,
             message: 'Token invalido'

@@ -11,9 +11,9 @@ const router = Router();
 router.post( 
     '/new',
     [
-        check( 'name', 'El nombre es obligatorio' ).not().isEmpty(),
+        check( 'name', 'El nombre debe tener 3 digitos minimo' ).isLength({ min: 3 }),
         check( 'email', 'El e-mail es invalido' ).isEmail(),
-        check( 'password', 'La contraseña debe tener minimo 6 caracteres' ).isLength({ min: 6 }),
+        check( 'password', 'La contraseña debe tener minimo 6 digitos' ).isLength({ min: 6 }),
         validarCampos
     ],
     crearUsuario
@@ -22,7 +22,7 @@ router.post(
     '/',
     [
         check( 'email', 'El e-mail es invalido' ).isEmail(),
-        check( 'password', 'La contraseña debe tener minimo 6 caracteres' ).isLength({ min: 6 }),
+        check( 'password', 'La contraseña debe tener minimo 6 digitos' ).isLength({ min: 6 }),
         validarCampos
     ],
     loginUsuario

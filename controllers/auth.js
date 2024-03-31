@@ -13,7 +13,12 @@ export const crearUsuario = async ( req, res = response ) => {
         if( usuario ) {
             return res.status( 400 ).json({
                 ok: false,
-                message: 'Este email ya esta registrado!',
+                errors: {
+                    email: {
+                        message: 'Este email ya esta registrado!',
+                        value: email
+                    }
+                }
             })
         }
         usuario = new Usuario( req.body );
@@ -22,18 +27,21 @@ export const crearUsuario = async ( req, res = response ) => {
         usuario.password = bcryptjs.hashSync( password, salt );
 
         await usuario.save();
-        const jwt = await generarJWT( usuario.id, usuario.name );
+        const token = await generarJWT( usuario.id, usuario.name );
 
         res.status( 201 ).json({
             ok: true,
             uid: usuario.id,
             name: usuario.name,
-            jwt,
+            token,
         })
     } catch (error) {
         res.status( 500 ).json({
             ok: false,
-            message: 'Error inesperado del server al registrar el usuario. Contactese con nuestra mesa de ayuda!',
+            errors: {
+                message: 'Error inesperado del server al registrar el usuario. Contactese con nuestra mesa de ayuda!',
+                value: email
+            }
         })
     }
 }
