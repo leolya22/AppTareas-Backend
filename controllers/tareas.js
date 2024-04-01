@@ -68,7 +68,7 @@ export const completarTarea = async ( req, res = response ) => {
     try {
         const tarea = await encontrarTarea( res, tareaId, uid, false );
         if( !tarea ) return;
-        tarea.status = 'completada'
+        tarea.status = 'completed'
 
         const tareaCompletada = await Tarea.findByIdAndUpdate( tareaId, tarea, { new: true } );
         return res.json({
