@@ -15,7 +15,7 @@ export const crearUsuario = async ( req, res = response ) => {
                 ok: false,
                 errors: {
                     email: {
-                        message: 'Este email ya esta registrado!',
+                        msg: 'Este email ya esta registrado!',
                         value: email
                     }
                 }
@@ -39,8 +39,10 @@ export const crearUsuario = async ( req, res = response ) => {
         res.status( 500 ).json({
             ok: false,
             errors: {
-                message: 'Error inesperado del server al registrar el usuario. Contactese con nuestra mesa de ayuda!',
-                value: email
+                password: {
+                    msg: 'Error inesperado del server al registrar el usuario. Contactese con nuestra mesa de ayuda!',
+                    value: password
+                }
             }
         })
     }
@@ -89,7 +91,12 @@ export const loginUsuario = async ( req, res = response ) => {
     } catch (error) {
         res.status( 500 ).json({
             ok: false,
-            message: 'Error inesperado del server al iniciar sesion. Contactese con nuestra mesa de ayuda!',
+            errors: {
+                password: {
+                    msg: 'Error inesperado del server al iniciar sesion. Contactese con nuestra mesa de ayuda!',
+                    value: password
+                }
+            }
         })
     }
 }

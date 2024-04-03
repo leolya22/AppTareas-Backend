@@ -17,7 +17,7 @@ export const encontrarTarea = async ( res, tareaId, uid, pendienteDeEliminar ) =
             });
             return false;
         }
-        if( tarea.status == 'completada' && !pendienteDeEliminar ) {
+        if( tarea.status == 'completed' && !pendienteDeEliminar ) {
             res.status( 401 ).json({
                 ok: false,
                 message: 'No se puede modificar/completar una tarea que ya esta completada'
@@ -26,6 +26,10 @@ export const encontrarTarea = async ( res, tareaId, uid, pendienteDeEliminar ) =
         }
         return tarea;
     } catch ( error ) {
-        console.log( error );
+        res.status( 401 ).json({
+            ok: false,
+            message: 'Ocurrio un error inesperado!'
+        })
+        return false;
     }
 }
